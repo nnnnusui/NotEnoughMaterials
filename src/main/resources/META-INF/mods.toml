@@ -1,0 +1,40 @@
+
+modLoader="javafml" #mandatory
+loaderVersion="[31,)" #mandatory
+
+[[mods]] #mandatory
+modId="nem" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="NotEnoughMaterials" #mandatory
+credits="(～ーωー)～" #optional
+authors="nnnnusui" #optional
+description='''
+
+lang=en
+ 1. Generate a resource pack that includes
+        'assets/nem/blockstate/material.json'.
+
+ 2. When the game starts,
+        the blockstate described in material.json
+        is added to the block[nem:material] in game.
+
+ 3. !!!! Please apply resourcepack:'NotEnoughMaterials' !!!!
+
+ 4. /setblock ~ ~ ~ nem:material[model=nem]
+
+
+----------------------------------------
+
+
+lang=ja
+ 1. ファイル:'assets/nem/blockstate/material.json'
+        を含むリソースパックを生成します。
+
+ 2. ゲーム起動時、
+        material.json に記述されたblockstateが、
+        block[nem:material] に追加されます。
+
+ 3. !!!! リソースパック:'NotEnoughMaterials' を適用してください !!!!
+
+ 4. /setblock ~ ~ ~ nem:material[model=nem]
+'''
