@@ -1,0 +1,15 @@
+{
+   "string": "st \u102A "
+  ,"num1": -0.24e-1
+  ,"num2": 111111111111111111111111111111111111111111111111111111111111111111
+  ,"obj": {
+     "true"  : true
+    ,"false" : false
+    ,"null"  : null
+    ,"string": "str"
+    ,"obj"   : { "obj": {  } }
+    ,"array" : [
+      true, false, null, "str", {}, []
+    ]
+  }
+}
