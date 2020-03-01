@@ -1,0 +1,15 @@
+# sbt
+target
+*.class
+
+# intelliJ IDEA
+*.iml
+*.ipr
+*.iws
+.idea
+out
+
+# original
+orphan/
+
+resource/
