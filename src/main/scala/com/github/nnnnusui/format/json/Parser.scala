@@ -28,10 +28,10 @@ private[format] object Parser extends RegexParsers{
   val _false: Parser[Json.False.type] =       "false" ^^ (_=> Json.False)
   val _null:  Parser[Json.Null.type]  =       "null"  ^^ (_=> Json.Null)
 
-  def elements: Parser[List[Json.Value ]] = rep1sep(element, ",") | (ws ^^ (_=> List.empty))
-  def members:  Parser[List[Json.Member]] = rep1sep(member , ",") | (ws ^^ (_=> List.empty))
-  def member:   Parser[Json.Member]
-    = (ws ~> string <~ ws) ~ (":" ~> element) ^^ {case string ~ element => Json.Member(string, element)}
+  def elements: Parser[List[Json.Value]]              = rep1sep(element, ",")               | (ws ^^ (_=> List.empty))
+  def members:  Parser[Map[Json.String, Json.Value]]  = rep1sep(member , ",") ^^ (_.toMap)  | (ws ^^ (_=> Map.empty ))
+  def member: Parser[(Json.String, Json.Value)]
+    = (ws ~> string <~ ws) ~ (":" ~> element) ^^ {case string ~ element => string -> element}
 
   def characters: Parser[String] = rep(character) ^^ (_.mkString)
   def character:  Parser[String] = (".".r - "\"" - "\\") | "\\" ~> escape
