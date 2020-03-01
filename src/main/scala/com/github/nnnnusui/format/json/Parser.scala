@@ -17,19 +17,19 @@ private[format] object Parser extends RegexParsers{
   override def skipWhitespace: Boolean = false
   def ws: Parser[Option[String]] = opt(whiteSpace)
 
-  def element: Parser[Json.Element] = ws ~> value <~ ws ^^ (it=> Json.Element(it))
+  def element: Parser[Json.Value] = ws ~> value <~ ws
 
   def value:   Parser[Json.Value]   = _object | array | string | number | _true | _false | _null
   def _object: Parser[Json.Object]  = "{"   ~> members    <~ "}"  ^^ (it=> Json.Object(it))
   def array:   Parser[Json.Array]   = "["   ~> elements   <~ "]"  ^^ (it=> Json.Array(it))
-  def string:  Parser[Json.String]     = "\""  ~> characters <~ "\"" ^^ (it=> Json.String(it))
+  def string:  Parser[Json.String]  = "\""  ~> characters <~ "\"" ^^ (it=> Json.String(it))
   def number:  Parser[Json.Number]  =          double             ^^ (it=> Json.Number(it))
   val _true:  Parser[Json.True.type]  =       "true"  ^^ (_=> Json.True)
   val _false: Parser[Json.False.type] =       "false" ^^ (_=> Json.False)
   val _null:  Parser[Json.Null.type]  =       "null"  ^^ (_=> Json.Null)
 
-  def elements: Parser[List[Json.Element]]  = rep1sep(element, ",") | (ws ^^ (_=> List.empty))
-  def members:  Parser[List[Json.Member]]   = rep1sep(member , ",") | (ws ^^ (_=> List.empty))
+  def elements: Parser[List[Json.Value ]] = rep1sep(element, ",") | (ws ^^ (_=> List.empty))
+  def members:  Parser[List[Json.Member]] = rep1sep(member , ",") | (ws ^^ (_=> List.empty))
   def member:   Parser[Json.Member]
     = (ws ~> string <~ ws) ~ (":" ~> element) ^^ {case string ~ element => Json.Member(string, element)}
 
@@ -54,7 +54,7 @@ private[format] object Parser extends RegexParsers{
 
   def digits: Parser[String] = rep1(digit) ^^ (_.mkString)
   def digit:  Parser[String] = "0" | oneToNine
-  def oneToNine: Regex = "[1-9]".r
+  def oneToNine: Regex       = "[1-9]".r
   def fraction: Parser[String] = '.' ~> digits ^^ (it=> s".$it")
   def exponent: Parser[String] = ("E" | "e") ~> opt(sign) ~ digits ^^ {case sign ~ digits => s"e${sign.getOrElse("")}$digits"}
   def sign:     Parser[String] = "+" | "-"
