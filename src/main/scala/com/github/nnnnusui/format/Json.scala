@@ -7,7 +7,9 @@ object Json{
   def stringify(json: Json) = ???
 
   sealed trait Value extends Json
-  case class  Object(value: Map[Predef.String, Value]) extends Value
+  case class  Object(value: Map[Predef.String, Value]) extends Value {
+    def get(key: Predef.String): Option[Value] = value.get(key)
+  }
   case class  Array (value: List[Value]  ) extends Value
   case class  String(value: Predef.String) extends Value
   case class  Number(value: Double       ) extends Value
