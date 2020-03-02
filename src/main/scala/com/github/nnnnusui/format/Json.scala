@@ -1,7 +1,11 @@
 package com.github.nnnnusui
 package format
 
-sealed trait Json
+sealed trait Json{
+  def option[A <: Json : Manifest]: Option[A] =
+    if(manifest[A] == manifest[this.type]) Some(this.asInstanceOf[A])
+    else                                   None
+}
 object Json{
   def parse(text: Predef.String) = json.Parser(text)
   def stringify(json: Json) = ???
