@@ -7,14 +7,14 @@ sealed trait Json{
     else                                   None
 }
 object Json{
-  def parse(text: Predef.String) = json.Parser(text)
+  def parse(text: Predef.String): Either[Predef.String, Value] = json.Parser(text)
   def stringify(json: Json) = ???
 
   sealed trait Value extends Json
   case class  Object(value: Map[Predef.String, Value]) extends Value {
     def get(key: Predef.String): Option[Value] = value.get(key)
   }
-  case class  Array (value: List[Value]  ) extends Value
+  case class  Array (value: Seq[Value]   ) extends Value
   case class  String(value: Predef.String) extends Value
   case class  Number(value: Double       ) extends Value
   case object True  extends Value
