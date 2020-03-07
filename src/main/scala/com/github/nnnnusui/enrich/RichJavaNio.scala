@@ -19,5 +19,7 @@ object RichJavaNio {
       else                   Seq.empty[Path]
     def lines(path: Path): Seq[String] =
       Files.lines(path).iterator().asScala.toSeq
+    def walk(path: Path): Seq[Path] =
+      Files.walk(path).iterator().asScala.toSeq
   }
 }
