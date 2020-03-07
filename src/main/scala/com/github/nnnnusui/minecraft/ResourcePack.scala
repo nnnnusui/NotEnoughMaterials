@@ -7,7 +7,10 @@ import com.github.nnnnusui.enrich.RichJavaNio._
 import com.github.nnnnusui.format.Json
 import com.github.nnnnusui.minecraft.resroucepack.{Asset, BlockState, Model, Texture}
 
-case class ResourcePack(name: String, assets: Seq[Asset])
+case class ResourcePack(name: String, assets: Seq[Asset]){
+  def diet: ResourcePack =
+    this.copy(assets = assets.map(_.diet))
+}
 object ResourcePack{
   def apply(path: Path): ResourcePack ={
     val name =
