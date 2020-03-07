@@ -1,11 +1,13 @@
-package com.github.nnnnusui.minecraft
+package com.github.nnnnusui
+package minecraft
 
 import java.nio.file.{Files, Path, Paths}
 
 import com.github.nnnnusui.enrich.RichJavaNio._
 import com.github.nnnnusui.format.Json
+import com.github.nnnnusui.minecraft.resroucepack.{Asset, BlockState, Model, Texture}
 
-case class ResourcePack(name: String, assets: Seq[ResourcePack.Asset])
+case class ResourcePack(name: String, assets: Seq[Asset])
 object ResourcePack{
   def apply(path: Path): ResourcePack ={
     val name =
@@ -13,18 +15,6 @@ object ResourcePack{
       else                        path.getFileNameWithoutExtension
     new ResourcePack(name, getAssets(path))
   }
-
-  case class Asset(name: String, blockStates: Seq[BlockState], models: Seq[Model], textures: Seq[Texture])
-  case class BlockState(name: String, json: Json.Object){
-    val states: Map[String, Json.Value] =
-      json.get("variants")
-      .toSeq
-      .flatMap(_.option[Json.Object])
-      .flatMap(_.value)
-      .toMap
-  }
-  case class Model(  path: Path, json: Json.Object)
-  case class Texture(path: Path, data: Array[Byte])
 
   def getAssets(resourcePackPath: Path): Seq[Asset] ={
     RichFiles.list(resourcePackPath.resolve("assets"))
