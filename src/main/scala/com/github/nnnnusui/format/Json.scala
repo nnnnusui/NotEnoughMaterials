@@ -8,7 +8,18 @@ sealed trait Json{
 }
 object Json{
   def parse(text: Predef.String): Either[Predef.String, Value] = json.Parser(text)
-  def stringify(json: Json) = ???
+  def stringify(json: Json): Predef.String =
+    json match {
+      case value: Value => value match {
+        case Object(value)  => s"{${value.map{ case (str, value) => s""""$str":${stringify(value)}""" }.mkString(",")}}"
+        case Array( value)  => s"[${value.map(it=> stringify(it)).mkString(",")}]"
+        case String(value)  => s""""$value""""
+        case Number(value)  => s"$value"
+        case True           =>  "true"
+        case False          =>  "false"
+        case Null           =>  "null"
+      }
+    }
 
   sealed trait Value extends Json
   case class  Object(value: Map[Predef.String, Value]) extends Value {
