@@ -41,4 +41,26 @@ case class Asset(name: String, blockStates: Seq[BlockState], models: Seq[Model],
      ,textures = textures.filter(texture=> texturePaths.contains(texture.path))
     )
   }
+
+  def updated(patch: Asset): Asset =
+    this.copy(
+      blockStates = blockStates.map(it=>
+        patch.blockStates
+        .find(_.name == it.name)
+        .getOrElse(it)
+      )
+     ,models      = models.map(it=>
+        patch.models
+        .find(_.path == it.path)
+        .getOrElse(it)
+      )
+     ,textures    = textures.map(it=>
+        patch.textures
+        .find(_.path == it.path)
+        .getOrElse(it)
+      )
+    )
+//  def complementedWith(src: Asset): Asset ={
+//
+//  }
 }

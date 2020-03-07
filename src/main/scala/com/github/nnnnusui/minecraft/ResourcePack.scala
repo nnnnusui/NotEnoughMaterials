@@ -10,6 +10,20 @@ import com.github.nnnnusui.minecraft.resroucepack.{Asset, BlockState, Model, Tex
 case class ResourcePack(name: String, assets: Seq[Asset]){
   def diet: ResourcePack =
     this.copy(assets = assets.map(_.diet))
+  def updated(patch: ResourcePack): ResourcePack =
+    this.copy(assets = assets.map(asset=>
+      patch.assets
+      .find(_.name == asset.name)
+      .map(it=> asset.updated(it))
+      .getOrElse(asset)
+    ))
+//  def complementedWith(src: ResourcePack): ResourcePack =
+//    this.copy(assets = assets.map(asset=>
+//      src.assets
+//      .find(_.name == asset.name)
+//      .map(it=> asset.complementedWith(it))
+//      .getOrElse(asset)
+//    ))
 }
 object ResourcePack{
   def apply(path: Path): ResourcePack ={
