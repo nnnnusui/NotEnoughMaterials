@@ -15,7 +15,7 @@ object ResourcePack{
   def apply(path: Path): ResourcePack ={
     val name =
       if(Files.isDirectory(path)) path.getFileName.toString
-      else                        path.getFileNameWithoutExtension
+      else                        path.fileNameWithoutExtension
     new ResourcePack(name, getAssets(path))
   }
 
@@ -26,14 +26,14 @@ object ResourcePack{
         val blockStates = getBlockStates( dir)
         val models      = getModels(      dir)
         val textures    = getTextures(    dir)
-        Asset(dir.getFileNameWithoutExtension, blockStates, models, textures)
+        Asset(dir.fileNameWithoutExtension, blockStates, models, textures)
       }
   }
   def getBlockStates(assetPath: Path): Seq[BlockState] ={
     RichFiles.list(assetPath.resolve("blockstates"))
-      .filter( path => path.getExtension == "json")
+      .filter( path => path.extension == "json")
       .flatMap(path => Json.parse(RichFiles.lines(path).mkString) match {
-        case Right(it: Json.Object)=> Some(BlockState(path.getFileNameWithoutExtension, it))
+        case Right(it: Json.Object)=> Some(BlockState(path.fileNameWithoutExtension, it))
         case it                    => println(s"WARNING: $it"); None
       })
   }
@@ -41,7 +41,7 @@ object ResourcePack{
     val modelsDir = assetPath.resolve("models")
     RichFiles.walk(modelsDir)
     .filter(it=> !Files.isDirectory(it))
-    .filter(_.getExtension == "json")
+    .filter(_.extension == "json")
     .flatMap{path=>
       val localPath = modelsDir.relativize(path)
       Json.parse(RichFiles.lines(path).mkString)
@@ -54,7 +54,7 @@ object ResourcePack{
     val texturesDir = assetPath.resolve("textures")
     RichFiles.walk(texturesDir)
     .filter(it=> !Files.isDirectory(it))
-    .filter(_.getExtension == "png")
+    .filter(_.extension == "png")
     .map{path=>
       val localPath = texturesDir.relativize(path)
       Texture(localPath, Files.readAllBytes(path))

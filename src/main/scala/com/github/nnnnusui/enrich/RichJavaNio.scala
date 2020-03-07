@@ -6,9 +6,9 @@ import scala.collection.JavaConverters._
 
 object RichJavaNio {
   implicit class RichPath(val path: Path){
-    def getExtension: String =
+    def extension: String =
       path.getFileName.toString.reverse.takeWhile(_ != '.').reverse
-    def getFileNameWithoutExtension: String =
+    def fileNameWithoutExtension: String =
       path.getFileName.toString.takeWhile(_ != '.')
     def mkString(sep: String): String =
       path.iterator().asScala.mkString(sep)
