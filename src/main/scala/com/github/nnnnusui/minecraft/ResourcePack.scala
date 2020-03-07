@@ -1,7 +1,7 @@
 package com.github.nnnnusui
 package minecraft
 
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{Files, Path}
 
 import com.github.nnnnusui.enrich.RichJavaNio._
 import com.github.nnnnusui.format.Json
@@ -21,8 +21,8 @@ object ResourcePack{
       .filter(path=> Files.isDirectory(path))
       .map{   dir =>
         val blockStates = getBlockStates( dir)
-        val models      = getModels(      dir, blockStates)
-        val textures    = getTextures(    dir, models)
+        val models      = getModels(      dir)
+        val textures    = getTextures(    dir)
         Asset(dir.getFileNameWithoutExtension, blockStates, models, textures)
       }
   }
@@ -34,48 +34,27 @@ object ResourcePack{
         case it                    => println(s"WARNING: $it"); None
       })
   }
-  def getModels(assetPath: Path, blockStates: Seq[BlockState]): Seq[Model] ={
+  def getModels(assetPath: Path): Seq[Model] ={
     val modelsDir = assetPath.resolve("models")
-    blockStates
-      .flatMap(_.json.value.get("variants"))
-      .flatMap(_.option[Json.Object])
-      .flatMap(_.value.values)
-      .flatMap(_ match {
-        case obj: Json.Object =>
-          obj.get("model")
-            .flatMap(_.option[Json.String])
-            .map(_.value)
-            .toSeq
-        case array: Json.Array =>
-          array.value
-            .flatMap(_.option[Json.Object])
-            .flatMap(_.value.get("model"))
-            .flatMap(_.option[Json.String])
-            .map(_.value)
-      })
-      .distinct
-      .map(it=> Paths.get(s"$it.json"))
-      .flatMap(localPath=>
-        Json.parse(RichFiles.lines(modelsDir.resolve(localPath)).mkString)
-          .toSeq
-          .flatMap(_.option[Json.Object])
-          .map(json => Model(localPath, json))
-      )
-  }
-  def getTextures(assetPath: Path, models: Seq[Model]): Seq[Texture] ={
-    val texturesDir = assetPath.resolve("textures")
-    models.flatMap(model=>
-      model.json.get("textures")
+    RichFiles.walk(modelsDir)
+    .filter(it=> !Files.isDirectory(it))
+    .filter(_.getExtension == "json")
+    .flatMap{path=>
+      val localPath = modelsDir.relativize(path)
+      Json.parse(RichFiles.lines(path).mkString)
       .toSeq
       .flatMap(_.option[Json.Object])
-      .flatMap(_.value.values)
-      .flatMap(_.option[Json.String])
-      .map(_.value)
-      .distinct
-      .map(it=> Paths.get(s"$it.png"))
-      .map(localPath=>
-        Texture(localPath, Files.readAllBytes(texturesDir.resolve(localPath)))
-      )
-    )
+      .map(json=> Model(localPath, json))
+    }
+  }
+  def getTextures(assetPath: Path): Seq[Texture] ={
+    val texturesDir = assetPath.resolve("textures")
+    RichFiles.walk(texturesDir)
+    .filter(it=> !Files.isDirectory(it))
+    .filter(_.getExtension == "png")
+    .map{path=>
+      val localPath = texturesDir.relativize(path)
+      Texture(localPath, Files.readAllBytes(path))
+    }
   }
 }
