@@ -8,10 +8,10 @@ class ResourcePackTest extends org.scalatest.FunSuite {
   val vanilla = ResourcePack(vanillaPath)
   val pack = ResourcePack(packPath)
   val patched = vanilla.updated(pack)
-  printInfo(vanilla.diet)
+  printInfo(vanilla.dieted)
   printInfo(pack)
   printInfo(patched)
-  printInfo(patched.diet)
+  printInfo(patched.dieted)
 
   def printInfo(pack: ResourcePack): Unit =
     println(s"${pack.name}: ${pack.assets.head.blockStates.find(_.name == "acacia_leaves")}")

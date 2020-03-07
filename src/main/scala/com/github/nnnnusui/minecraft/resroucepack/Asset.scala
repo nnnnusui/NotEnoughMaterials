@@ -6,7 +6,7 @@ import java.nio.file.Paths
 import com.github.nnnnusui.format.Json
 
 case class Asset(name: String, blockStates: Seq[BlockState], models: Seq[Model], textures: Seq[Texture]){
-  def diet: Asset ={
+  def dieted: Asset ={
     val modelPaths =
       blockStates
       .flatMap(_.json.value.get("variants"))

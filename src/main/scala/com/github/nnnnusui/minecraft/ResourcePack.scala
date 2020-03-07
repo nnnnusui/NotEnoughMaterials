@@ -8,8 +8,8 @@ import com.github.nnnnusui.format.Json
 import com.github.nnnnusui.minecraft.resroucepack.{Asset, BlockState, Model, Texture}
 
 case class ResourcePack(name: String, assets: Seq[Asset]){
-  def diet: ResourcePack =
-    this.copy(assets = assets.map(_.diet))
+  def dieted: ResourcePack =
+    this.copy(assets = assets.map(_.dieted))
   def updated(patch: ResourcePack): ResourcePack =
     this.copy(assets = assets.map(asset=>
       patch.assets
