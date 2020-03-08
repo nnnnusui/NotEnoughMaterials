@@ -7,9 +7,15 @@ import scala.collection.JavaConverters._
 object RichJavaNio {
   implicit class RichPath(val path: Path){
     def extension: String =
-      path.getFileName.toString.reverse.takeWhile(_ != '.').reverse
+      path.getFileName.toString match {
+        case it if it.contains('.')=> it.split('.').reverse.head.reverse
+        case _                     => ""
+      }
     def fileNameWithoutExtension: String =
-      path.getFileName.toString.takeWhile(_ != '.')
+      path.getFileName.toString match {
+        case it if it.contains('.')=> it.split('.').reverse.tail.reverse.mkString(".")
+        case it                    => it
+      }
     def mkString(sep: String): String =
       path.iterator().asScala.mkString(sep)
   }
