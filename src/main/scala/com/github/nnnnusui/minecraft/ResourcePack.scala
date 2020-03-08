@@ -1,6 +1,7 @@
 package com.github.nnnnusui
 package minecraft
 
+import java.net.URI
 import java.nio.file.{Files, Path}
 
 import com.github.nnnnusui.enrich.RichJavaNio._
@@ -27,10 +28,12 @@ case class ResourcePack(name: String, assets: Seq[Asset]){
 }
 object ResourcePack{
   def apply(path: Path): ResourcePack ={
-    val name =
-      if(Files.isDirectory(path)) path.getFileName.toString
-      else                        path.fileNameWithoutExtension
-    new ResourcePack(name, getAssets(path))
+    if(Files.isDirectory(path)) new ResourcePack(path.getFileName.toString, getAssets(path))
+    else {
+      val zipUri = new URI("jar", path.toUri.toString, null)
+      val fileSystem = RichFileSystems.newFileSystem(zipUri, Map(), ClassLoader.getSystemClassLoader)
+      new ResourcePack(path.fileNameWithoutExtension, getAssets(fileSystem.getPath("/")))
+    }
   }
 
   def getAssets(resourcePackPath: Path): Seq[Asset] ={
