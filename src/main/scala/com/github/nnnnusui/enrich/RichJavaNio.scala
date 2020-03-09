@@ -31,11 +31,13 @@ object RichJavaNio {
   object RichFiles{
     def list(path: Path): Seq[Path] =
       if(Files.exists(path)) Files.list(path).iterator().asScala.toSeq
-      else                   Seq.empty[Path]
+      else                   Seq.empty
     def lines(path: Path): Seq[String] =
-      Files.lines(path).iterator().asScala.toSeq
+      if(Files.exists(path)) Files.lines(path).iterator().asScala.toSeq
+      else                   Seq.empty
     def walk(path: Path): Seq[Path] =
-      Files.walk(path).iterator().asScala.toSeq
+      if(Files.exists(path)) Files.walk(path).iterator().asScala.toSeq
+      else                   Seq.empty
   }
   object RichFileSystems{
     def newFileSystem(uri: URI, options: Map[String, Any], loader: ClassLoader): FileSystem =
