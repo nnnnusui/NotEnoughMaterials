@@ -1,7 +1,7 @@
 package com.github.nnnnusui
 package minecraft.resroucepack
 
-import java.nio.file.Paths
+import java.nio.file.{Path, Paths}
 
 import com.github.nnnnusui.format.Json
 
@@ -63,4 +63,11 @@ case class Asset(name: String, blockStates: Seq[BlockState], models: Seq[Model],
 //  def complementedWith(src: Asset): Asset ={
 //
 //  }
+
+  def writeTo(directory: Path): Unit ={
+    val assetPath = directory.resolve(name)
+    blockStates.foreach(_.writeTo(assetPath resolve "blockstates"))
+    models     .foreach(_.writeTo(assetPath resolve "models"     ))
+    textures   .foreach(_.writeTo(assetPath resolve "textures"   ))
+  }
 }

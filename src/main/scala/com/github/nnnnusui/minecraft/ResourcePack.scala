@@ -2,7 +2,7 @@ package com.github.nnnnusui
 package minecraft
 
 import java.net.URI
-import java.nio.file.{Files, Path}
+import java.nio.file.{FileSystems, Files, Path}
 
 import com.github.nnnnusui.enrich.RichJavaNio._
 import com.github.nnnnusui.format.Json
@@ -25,6 +25,11 @@ case class ResourcePack(name: String, assets: Seq[Asset]){
 //      .map(it=> asset.complementedWith(it))
 //      .getOrElse(asset)
 //    ))
+
+  def writeTo(path: Path): Unit ={
+    val packPath = path.resolve(name)
+    assets.foreach(_.writeTo(packPath resolve "assets"))
+  }
 }
 object ResourcePack{
   def apply(path: Path): ResourcePack ={
@@ -37,7 +42,7 @@ object ResourcePack{
   }
 
   def getAssets(resourcePackPath: Path): Seq[Asset] ={
-    RichFiles.list(resourcePackPath.resolve("assets"))
+    RichFiles.list(resourcePackPath resolve "assets")
       .filter(path=> Files.isDirectory(path))
       .map{   dir =>
         val blockStates = getBlockStates( dir)
@@ -47,7 +52,7 @@ object ResourcePack{
       }
   }
   def getBlockStates(assetPath: Path): Seq[BlockState] ={
-    RichFiles.list(assetPath.resolve("blockstates"))
+    RichFiles.list(assetPath resolve "blockstates")
       .filter( path => path.extension == "json")
       .flatMap(path => Json.parse(RichFiles.lines(path).mkString) match {
         case Right(it: Json.Object)=> Some(BlockState(path.fileNameWithoutExtension, it))
@@ -55,7 +60,7 @@ object ResourcePack{
       })
   }
   def getModels(assetPath: Path): Seq[Model] ={
-    val modelsDir = assetPath.resolve("models")
+    val modelsDir = assetPath resolve "models"
     RichFiles.walk(modelsDir)
     .filter(it=> !Files.isDirectory(it))
     .filter(_.extension == "json")
@@ -64,17 +69,17 @@ object ResourcePack{
       Json.parse(RichFiles.lines(path).mkString)
       .toSeq
       .flatMap(_.option[Json.Object])
-      .map(json=> Model(localPath, json))
+      .map(json=> Model(localPath.toString, json))
     }
   }
   def getTextures(assetPath: Path): Seq[Texture] ={
-    val texturesDir = assetPath.resolve("textures")
+    val texturesDir = assetPath resolve "textures"
     RichFiles.walk(texturesDir)
     .filter(it=> !Files.isDirectory(it))
     .filter(_.extension == "png")
     .map{path=>
       val localPath = texturesDir.relativize(path)
-      Texture(localPath, Files.readAllBytes(path))
+      Texture(localPath.toString, Files.readAllBytes(path))
     }
   }
 }

@@ -1,16 +1,22 @@
 package com.github.nnnnusui.minecraft
 
-import java.nio.file.Paths
+import java.nio.file.{Files, Paths}
 
-class ResourcePackTest extends org.scalatest.FunSuite {
-  val vanillaPath = Paths.get("resource", "source", "vanilla", "1.15.2")
-  val vanillaJarPath = Paths.get("resource", "source", "vanilla", "1.15.2.jar")
-  val vanilla = ResourcePack(vanillaPath)
-  val fromJar = ResourcePack(vanillaJarPath)
-  println(vanilla == fromJar) // not equal ...
-  printInfo(vanilla)
-  printInfo(fromJar)
+import org.scalatest.flatspec.AnyFlatSpec
 
-  def printInfo(pack: ResourcePack): Unit =
-    println(s"${pack.name}: ${pack.assets.head.models.length}")
+class ResourcePackTest extends AnyFlatSpec {
+  private val resourceRoot = Paths.get("resource")
+  private val sourceRoot = resourceRoot resolve "source"
+  private val targetRoot = resourceRoot resolve "target"
+
+  "writeTo" should "match source" in {
+    val packName = "1.15.2"
+    val from = sourceRoot resolve "vanilla" resolve s"$packName.jar"
+    val to   = targetRoot resolve packName
+    val pack = ResourcePack(from)
+    if(Files.notExists(to))
+      pack.writeTo(to.getParent)
+    val writtenPack = ResourcePack(to)
+    assert(pack == writtenPack)
+  }
 }
