@@ -19,3 +19,7 @@ case class BlockState(name: String, json: Json.Object){
     Files.write(jsonPath, Json.stringify(json).getBytes(StandardCharsets.UTF_8))
   }
 }
+object BlockState{
+  def fromStates(name: String, states: Map[String, Json.Value]): BlockState =
+    BlockState(name, Json.Object(Map("variants" -> Json.Object(states))))
+}
