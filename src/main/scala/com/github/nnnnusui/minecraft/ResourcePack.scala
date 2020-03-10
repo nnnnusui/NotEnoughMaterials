@@ -2,7 +2,7 @@ package com.github.nnnnusui
 package minecraft
 
 import java.net.URI
-import java.nio.file.{FileSystems, Files, Path}
+import java.nio.file.{Files, Path}
 
 import com.github.nnnnusui.enrich.RichJavaNio._
 import com.github.nnnnusui.format.Json
@@ -69,7 +69,7 @@ object ResourcePack{
       Json.parse(RichFiles.lines(path).mkString)
       .toSeq
       .flatMap(_.option[Json.Object])
-      .map(json=> Model(localPath.toString, json))
+      .map(json=> Model(localPath.mkString("/"), json))
     }
   }
   def getTextures(assetPath: Path): Seq[Texture] ={
@@ -79,7 +79,7 @@ object ResourcePack{
     .filter(_.extension == "png")
     .map{path=>
       val localPath = texturesDir.relativize(path)
-      Texture(localPath.toString, Files.readAllBytes(path))
+      Texture(localPath.mkString("/"), Files.readAllBytes(path))
     }
   }
 }

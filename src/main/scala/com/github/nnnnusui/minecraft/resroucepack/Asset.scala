@@ -1,7 +1,7 @@
 package com.github.nnnnusui
 package minecraft.resroucepack
 
-import java.nio.file.{Path, Paths}
+import java.nio.file.Path
 
 import com.github.nnnnusui.format.Json
 
@@ -26,7 +26,7 @@ case class Asset(name: String, blockStates: Seq[BlockState], models: Seq[Model],
             .map(_.value)
       })
       .distinct
-      .map(it=> Paths.get(s"$it.json"))
+      .map(it=> s"$it.json")
     val texturePaths =
       models
       .flatMap(_.json.get("textures"))
@@ -35,9 +35,9 @@ case class Asset(name: String, blockStates: Seq[BlockState], models: Seq[Model],
       .flatMap(_.option[Json.String])
       .map(_.value)
       .distinct
-      .map(it=> Paths.get(s"$it.png"))
+      .map(it=> s"$it.png")
     this.copy(
-      models   = models.filter(model=> modelPaths.contains(model.path))
+      models   = models  .filter(model  => modelPaths  .contains(model.path  ))
      ,textures = textures.filter(texture=> texturePaths.contains(texture.path))
     )
   }
