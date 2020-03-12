@@ -8,10 +8,10 @@ import com.github.nnnnusui.format.{Base32hex, Json}
 import com.github.nnnnusui.minecraft.ResourcePack
 import com.github.nnnnusui.minecraft.resroucepack.{Asset, BlockState, Model, Texture}
 
-object ResourcePackConverter {
+object ResourcePackConverter { // TODO: overwrite
   def convertToNem(pack: ResourcePack): ResourcePack =
     ResourcePack(
-        name   = "NemTest"
+        name   = "NotEnoughMaterials"
       , assets = {
           val (states, models, textures) = pack.assets.map{ asset=>
             val destination = Paths.get(pack.name, asset.name)
