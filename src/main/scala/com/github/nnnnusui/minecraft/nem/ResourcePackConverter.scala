@@ -32,7 +32,7 @@ object ResourcePackConverter {
       case Json.Object(value) =>
         value.get("model")
           .flatMap(_.option[Json.String])
-          .map(it => Json.Object(value.updated("model", Json.String(destination.resolve(it.value).mkString("/")))))
+          .map(it => Json.Object(value.updated("model", Json.String(s"nem:${destination.resolve(it.value).mkString("/")}"))))
           .getOrElse(searchAndConvert(Json.Object(value)))
       case Json.Array(value) => Json.Array(value.map(searchAndConvert))
       case other => other
@@ -54,7 +54,7 @@ object ResourcePackConverter {
           value.option[Json.String]
             .map(_.value)
             .map(it=> destination.resolve(it))
-            .map(it=> Json.String(it.mkString("/")))
+            .map(it=> Json.String(s"nem:${it.mkString("/")}"))
             .getOrElse(value)
         }
       )
