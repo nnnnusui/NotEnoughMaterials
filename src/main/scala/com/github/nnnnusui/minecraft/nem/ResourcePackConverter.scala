@@ -1,9 +1,10 @@
 package com.github.nnnnusui.minecraft.nem
 
+import java.nio.charset.StandardCharsets
 import java.nio.file.{Path, Paths}
 
 import com.github.nnnnusui.enrich.RichJavaNio._
-import com.github.nnnnusui.format.Json
+import com.github.nnnnusui.format.{Base32hex, Json}
 import com.github.nnnnusui.minecraft.ResourcePack
 import com.github.nnnnusui.minecraft.resroucepack.{Asset, BlockState, Model, Texture}
 
@@ -38,7 +39,9 @@ object ResourcePackConverter {
     }
     blockStates.flatMap(blockState=>
       blockState.states.map{ case (state, value) =>
-        s"${destination.mkString("/")}:${blockState.name}/$state" -> // TODO: Base32 encode
+        val locateInfo = s"${destination.mkString("/")}:${blockState.name}/$state"
+        val encoded = Base32hex.encode(locateInfo.getBytes(StandardCharsets.UTF_8))
+        s"model=${encoded.toLowerCase.replace('=', '_')}" ->
         searchAndConvert(value)
       }
     ).toMap
