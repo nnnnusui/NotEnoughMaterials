@@ -16,20 +16,19 @@ public class BlockRegister {
     public static final BlockEntityType<MaterialBlockEntity> materialBlockEntity = BlockEntityType.Builder.of(MaterialBlockEntity::new, materialBlock).build(null);
 
     @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event){
+    public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
                 new BlockItem(materialBlock, new Item.Properties()).setRegistryName(NotEnoughMaterials.modId, MaterialBlock.registryName)
         );
     }
     @SubscribeEvent
-    public static void registerBlocks(RegistryEvent.Register<Block> event){
+    public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(
                 materialBlock
         );
     }
     @SubscribeEvent
-    public static void registerBlockEntity(final RegistryEvent.Register<BlockEntityType<?>> event)
-    {
+    public static void registerBlockEntity(final RegistryEvent.Register<BlockEntityType<?>> event) {
         materialBlockEntity.setRegistryName(NotEnoughMaterials.modId, MaterialBlockEntity.registryName);
         event.getRegistry().register(materialBlockEntity);
     }

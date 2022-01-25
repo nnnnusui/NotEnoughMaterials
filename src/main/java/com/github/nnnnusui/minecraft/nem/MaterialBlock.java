@@ -14,8 +14,6 @@ import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 public class MaterialBlock extends Block implements EntityBlock {
     public static final String registryName = "material";
     public static final String propertyName = "model";
