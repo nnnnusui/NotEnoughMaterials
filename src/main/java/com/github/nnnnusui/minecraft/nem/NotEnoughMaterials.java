@@ -1,12 +1,14 @@
 package com.github.nnnnusui.minecraft.nem;
 
 import net.minecraftforge.fml.common.Mod;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-@Mod("nem")
+@Mod(NotEnoughMaterials.modId)
 public class NotEnoughMaterials
 {
-//    private static final Logger LOGGER = LogManager.getLogger();
-    static final String modId = "nem";
+    public static final Logger logger = LogManager.getLogger();
+    public static final String modId = "nem";
 
     public NotEnoughMaterials() { }
 }
