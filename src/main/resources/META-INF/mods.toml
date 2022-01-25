@@ -1,7 +1,7 @@
 
 modLoader="javafml" #mandatory
 loaderVersion="[31,)" #mandatory
-license="" #mandatory
+license="THE SUSHI-WARE LICENSE" #mandatory
 
 [[mods]] #mandatory
 modId="nem" #mandatory
